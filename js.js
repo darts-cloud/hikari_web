@@ -234,7 +234,18 @@ function plotHistogram(src) {
     const mask = new cv.Mat();
 
     cv.calcHist(matVector, channels, mask, hist, histSize, ranges);
-    cv.imshow(`canvas3`, hist);
+    let result = cv.minMaxLoc(hist, mask);
+    let max = result.maxVal;
+    let dst = new cv.Mat.zeros(src.rows, histSize[0] * scale,
+                               cv.CV_8UC3);
+    // draw histogram
+    for (let i = 0; i < histSize[0]; i++) {
+        let binVal = hist.data32F[i] * src.rows / max;
+        let point1 = new cv.Point(i * scale, src.rows - 1);
+        let point2 = new cv.Point((i + 1) * scale - 1, src.rows - binVal);
+        cv.rectangle(dst, point1, point2, color, cv.FILLED);
+    }
+    cv.imshow(`canvas3`, dst);
 
     try {
         // cv.calcHist(matVector, channels, None, hist, histSize, ranges);
