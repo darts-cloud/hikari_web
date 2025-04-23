@@ -99,6 +99,8 @@ function handleImageLoad(img) {
         cv.rectangle(right, rectTopLeft, rectBottomRight, new cv.Scalar(0, 0, 0, 255), -1); // 半透明に設定
         cv.putText(right, strRight, pnt, cv.FONT_HERSHEY_SIMPLEX, 0.6, new cv.Scalar(255, 255, 255, 255), 1, cv.LINE_AA);
     }
+    plotHistogram(left);
+
     cv.resize(right, right, new cv.Size(right.cols, left.rows)); // rightの高さをleftに合わせてリサイズ
     const combined = new cv.Mat();
     const matVector = new cv.MatVector();
