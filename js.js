@@ -224,10 +224,10 @@ function plotHistogram(src) {
         return;
     }
     const hsv = new cv.Mat();
-    cv.cvtColor(src, hsv, cv.COLOR_RGBA2GRAY);
+    cv.cvtColor(src, hsv, cv.COLOR_RGBA2GRAY, 0);
     const channels = [0];
-    const histSize = [180];
-    const ranges = [0, 35000];
+    const histSize = [256];
+    const ranges = [0, 266];
     const matVector = new cv.MatVector();
     matVector.push_back(hsv);
     const hist = new cv.Mat();
