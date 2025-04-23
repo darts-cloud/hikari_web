@@ -3,11 +3,8 @@ window.onload = function(){
         const file = event.target.files[0]; // 最初のファイルを取得
         if (file && file instanceof Blob) { 
             const img = new Image();
-            img.onload = function() {
-                const img = new Image();
-                img.onload = function() {
-                    handleImageLoad(img);
-                }
+            img.onload = function(e) {
+                handleImageLoad(img);
                 img.src = e.target.result;
             }
             reader.readAsDataURL(file); 
