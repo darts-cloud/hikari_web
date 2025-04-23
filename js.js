@@ -102,10 +102,16 @@ function handleImageLoad(img) {
     const combined = new cv.Mat();
     const matVector = new cv.MatVector();
     matVector.push_back(left);
-    matVector.push_back(right);
+    const height = left.rows; // leftの高さを取得
+    cv.resize(right, right, new cv.Size(right.cols, height)); // rightの高さをleftに合わせてリサイズ
+    matVector.push_back(resizedRight);
     cv.hconcat(matVector, combined); // 左右の画像を結合
     cv.imshow(`canvas1`, combined); // 結合した画像をcanvas1に表示
     emptyMat.delete(); matVector.delete(); combined.delete();
+    images[0].delete();
+    images[1].delete();
+    left.delte();
+    right.delete();
     status.innerHTML = `左:${strLeft}<br>右:${strRight}`;
 }
 
