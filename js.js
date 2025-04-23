@@ -2,10 +2,13 @@ window.onload = function(){
     document.getElementById('upload').addEventListener('change', function(event) {
         const file = event.target.files[0]; // 最初のファイルを取得
         if (file && file instanceof Blob) { 
-            const img = new Image();
-            img.onload = function(e) {
-                handleImageLoad(img);
-                img.src = e.target.result;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function(e) {
+                    handleImageLoad(img);
+                    img.src = e.target.result;
+                }
             }
             reader.readAsDataURL(file); 
         } else {
