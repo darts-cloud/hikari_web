@@ -5,10 +5,10 @@ window.onload = function(){
             const reader = new FileReader();
             reader.onload = function(e) {
                 const img = new Image();
-                img.onload = function(e) {
+                img.onload = function() {
                     handleImageLoad(img);
-                    img.src = e.target.result;
                 }
+                img.src = e.target.result;
             }
             reader.readAsDataURL(file); 
         } else {
