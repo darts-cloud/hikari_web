@@ -233,9 +233,12 @@ function plotHistogram(src) {
     const hist = new cv.Mat();
     const mask = new cv.Mat();
 
+    cv.calcHist(matVector, channels, None, hist, histSize, ranges);
+    cv.imshow(`canvas3`, hist);
+
     try {
-        cv.calcHist(matVector, channels, None, hist, histSize, ranges);
-        cv.imshow(`canvas3`, hist);
+        // cv.calcHist(matVector, channels, None, hist, histSize, ranges);
+        // cv.imshow(`canvas3`, hist);
     } catch (err) {
         console.error("ヒストグラム計算中にエラー！", err);
     } finally {
