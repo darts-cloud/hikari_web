@@ -1,15 +1,17 @@
-document.getElementById('upload').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const img = new Image();
-        img.onload = function() {
-            handleImageLoad(img);
+window.onload = function(){
+    document.getElementById('upload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = function() {
+                handleImageLoad(img);
+            }
+            img.src = e.target.result;
         }
-        img.src = e.target.result;
-    }
-    reader.readAsDataURL(file);
-});
+        reader.readAsDataURL(file);
+    });
+};
 
 /*
 document.getElementById('loadImage').addEventListener('change', function() {
