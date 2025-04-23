@@ -99,15 +99,23 @@ function handleImageLoad(img) {
         cv.rectangle(right, rectTopLeft, rectBottomRight, new cv.Scalar(0, 0, 0, 255), -1); // 半透明に設定
         cv.putText(right, strRight, pnt, cv.FONT_HERSHEY_SIMPLEX, 0.6, new cv.Scalar(255, 255, 255, 255), 1, cv.LINE_AA);
     }
-    plotHistogram(left);
+    const hist1 = createHistogram(left);
+    const hist2 = createHistogram(right);
 
     cv.resize(right, right, new cv.Size(right.cols, left.rows)); // rightの高さをleftに合わせてリサイズ
     const combined = new cv.Mat();
-    const matVector = new cv.MatVector();
+    let matVector = new cv.MatVector();
     matVector.push_back(left);
     matVector.push_back(right);
     cv.hconcat(matVector, combined); // 左右の画像を結合
     cv.imshow(`canvas1`, combined); // 結合した画像をcanvas1に表示
+
+    matVector = new cv.MatVector();
+    matVector.push_back(hist1);
+    matVector.push_back(hist2);
+    cv.hconcat(matVector, combined); // 左右の画像を結合
+    cv.imshow(`canvas2`, combined); // 結合した画像をcanvas1に表示
+
     emptyMat.delete(); matVector.delete(); combined.delete();
     left.delete();
     right.delete();
@@ -219,7 +227,7 @@ function estimateColorTemperature(image) {
     return Math.max(10, Math.min(kelvin, 10000));
 }
 
-function plotHistogram(src) {
+function createHistogram(src) {
     if (src.empty()) {
         return;
     }
@@ -232,26 +240,21 @@ function plotHistogram(src) {
     matVector.push_back(hsv);
     const hist = new cv.Mat();
     const mask = new cv.Mat();
-    let color = new cv.Scalar(255, 255, 255);
+    let color = new cv.Scalar(0, 0, 0);
     let scale = 2;
-
-    cv.calcHist(matVector, channels, mask, hist, histSize, ranges);
-    let result = cv.minMaxLoc(hist, mask);
-    let max = result.maxVal;
-    let dst = new cv.Mat.zeros(src.rows, histSize[0] * scale,
-                               cv.CV_8UC3);
-    // draw histogram
-    for (let i = 0; i < histSize[0]; i++) {
-        let binVal = hist.data32F[i] * src.rows / max;
-        let point1 = new cv.Point(i * scale, src.rows - 1);
-        let point2 = new cv.Point((i + 1) * scale - 1, src.rows - binVal);
-        cv.rectangle(dst, point1, point2, color, cv.FILLED);
-    }
-    cv.imshow(`canvas3`, dst);
-
     try {
-        // cv.calcHist(matVector, channels, None, hist, histSize, ranges);
-        // cv.imshow(`canvas3`, hist);
+        cv.calcHist(matVector, channels, mask, hist, histSize, ranges);
+        let result = cv.minMaxLoc(hist, mask);
+        let max = result.maxVal;
+        let dst = new cv.Mat.ones(src.rows, histSize[0] * scale,
+                                   cv.CV_8UC3);
+        // draw histogram
+        for (let i = 0; i < histSize[0]; i++) {
+            let binVal = hist.data32F[i] * src.rows / max;
+            let point1 = new cv.Point(i * scale, src.rows - 1);
+            let point2 = new cv.Point((i + 1) * scale - 1, src.rows - binVal);
+            cv.rectangle(dst, point1, point2, color, cv.FILLED);
+        }
     } catch (err) {
         console.error("ヒストグラム計算中にエラー！", err);
     } finally {
@@ -260,6 +263,8 @@ function plotHistogram(src) {
         mask.delete();
         matVector.delete();
     }
+
+    return dst;
 }
 
 function getImageMatrix(canvasId) {
