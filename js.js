@@ -255,6 +255,7 @@ function createHistogram(src) {
             let point2 = new cv.Point((i + 1) * scale - 1, src.rows - binVal);
             cv.rectangle(dst, point1, point2, color, cv.FILLED);
         }
+        return dst;
     } catch (err) {
         console.error("ヒストグラム計算中にエラー！", err);
     } finally {
@@ -263,8 +264,6 @@ function createHistogram(src) {
         mask.delete();
         matVector.delete();
     }
-
-    return dst;
 }
 
 function getImageMatrix(canvasId) {
