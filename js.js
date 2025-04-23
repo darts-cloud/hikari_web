@@ -107,8 +107,6 @@ function handleImageLoad(img) {
     cv.hconcat(matVector, combined); // 左右の画像を結合
     cv.imshow(`canvas1`, combined); // 結合した画像をcanvas1に表示
     emptyMat.delete(); matVector.delete(); combined.delete();
-    images[0].delete();
-    images[1].delete();
     left.delete();
     right.delete();
     status.innerHTML = `左:${strLeft}<br>右:${strRight}`;
