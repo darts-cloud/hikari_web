@@ -64,6 +64,11 @@ document.getElementById('convertToHSV').addEventListener('click', function() { /
 */
 
 function handleImageLoad(img) {
+    const status = document.querySelector('#status');
+    status.innerHTML = "";
+    const emptyMat = new cv.Mat(480, 1280, cv.CV_8UC4, new cv.Scalar(255, 255, 255, 255)); // 白い空白の画像を作成
+    cv.imshow(`canvas1`, emptyMat); // 空白をcanvas1に表示
+
     const images = processImage(img);
     const left = images[1];
     const right = images[0];
@@ -96,7 +101,7 @@ function handleImageLoad(img) {
     matVector.push_back(right);
     cv.hconcat(matVector, combined); // 左右の画像を結合
     cv.imshow(`canvas1`, combined); // 結合した画像をcanvas1に表示
-    document.querySelector('#status').innerHTML = `左:${strLeft}<br>右:${strRight}`;
+    status.innerHTML = `左:${strLeft}<br>右:${strRight}`;
 }
 
 function processImage(image) {
