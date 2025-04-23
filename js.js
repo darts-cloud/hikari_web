@@ -66,14 +66,14 @@ document.getElementById('convertToHSV').addEventListener('click', function() { /
 function handleImageLoad(img) {
     const status = document.querySelector('#status');
     status.innerHTML = "";
-    const emptyMat = new cv.Mat(480, 1280, cv.CV_8UC4, new cv.Scalar(255, 255, 255, 255)); // 白い空白の画像を作成
-    cv.imshow(`canvas1`, emptyMat); // 空白をcanvas1に表示
 
     const images = processImage(img);
     if (images.length != 2) {
         status.innerHTML = "画像読み込みエラー。";
         return;
     }
+    const emptyMat = new cv.Mat(480, 1280, cv.CV_8UC4, new cv.Scalar(255, 255, 255, 255)); // 白い空白の画像を作成
+    cv.imshow(`canvas1`, emptyMat); // 空白をcanvas1に表示
     const left = images[1];
     const right = images[0];
     const rectTopLeft = new cv.Point(0, 0);
@@ -109,7 +109,7 @@ function handleImageLoad(img) {
     emptyMat.delete(); matVector.delete(); combined.delete();
     images[0].delete();
     images[1].delete();
-    left.delte();
+    left.delete();
     right.delete();
     status.innerHTML = `左:${strLeft}<br>右:${strRight}`;
 }
