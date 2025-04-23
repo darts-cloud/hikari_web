@@ -232,13 +232,13 @@ function plotHistogram(src) {
     matVector.push_back(hsv);
     const hist = new cv.Mat();
     const mask = new cv.Mat();
-    let color = new cv.Scalar(0, 0, 0);
+    let color = new cv.Scalar(255, 255, 255);
     let scale = 2;
 
     cv.calcHist(matVector, channels, mask, hist, histSize, ranges);
     let result = cv.minMaxLoc(hist, mask);
     let max = result.maxVal;
-    let dst = new cv.Mat.ones(src.rows, histSize[0] * scale,
+    let dst = new cv.Mat.zeros(src.rows, histSize[0] * scale,
                                cv.CV_8UC3);
     // draw histogram
     for (let i = 0; i < histSize[0]; i++) {
