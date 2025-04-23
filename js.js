@@ -4,9 +4,12 @@ window.onload = function(){
         if (file && file instanceof Blob) { 
             const img = new Image();
             img.onload = function() {
-                handleImageLoad(img);
+                const img = new Image();
+                img.onload = function() {
+                    handleImageLoad(img);
+                }
+                img.src = e.target.result;
             }
-            img.src = e.target.result;
             reader.readAsDataURL(file); 
         } else {
             console.error('選択されたファイルが無効です。');
