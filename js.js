@@ -1,15 +1,16 @@
 window.onload = function(){
     document.getElementById('upload').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = function(e) {
+        const file = event.target.files[0]; // 最初のファイルを取得
+        if (file && file instanceof Blob) { 
             const img = new Image();
             img.onload = function() {
                 handleImageLoad(img);
             }
             img.src = e.target.result;
+            reader.readAsDataURL(file); 
+        } else {
+            console.error('選択されたファイルが無効です。');
         }
-        reader.readAsDataURL(file);
     });
 };
 
