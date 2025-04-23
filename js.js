@@ -233,7 +233,7 @@ function plotHistogram(src) {
     const hist = new cv.Mat();
     const mask = new cv.Mat();
 
-    cv.calcHist(matVector, channels, None, hist, histSize, ranges);
+    cv.calcHist(matVector, channels, null, hist, histSize, ranges);
     cv.imshow(`canvas3`, hist);
 
     try {
