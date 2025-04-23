@@ -17,6 +17,11 @@
         }
         canvas {
             margin: 10px;
+            width: 640px; /* 幅を800pxに設定 */
+            height: 480px; /* 高さを600pxに設定 */
+        }
+        canvas .board {
+            margin: 10px;
             width: 1280px; /* 幅を800pxに設定 */
             height: 480px; /* 高さを600pxに設定 */
         }
@@ -46,10 +51,10 @@
         <span id="status" style="background-color:white; color: black;"></span>
         <div style="display: flex; align-items: flex-start;">
             <div style="margin-right: 10px; position: relative;">
-                <canvas id="canvas1"></canvas>
+                <canvas id="canvas1" class="board"></canvas>
             </div>
             <div style="position: relative;">
-                <canvas id="canvas2"></canvas>
+                <canvas id="canvas2" class="board"></canvas>
             </div>
         </div>
         <canvas id="canvas3"></canvas>
