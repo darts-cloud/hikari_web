@@ -1,3 +1,4 @@
+DEBUG = 1;
 window.onload = function(){
     document.getElementById('upload').addEventListener('change', function(event) {
         const file = event.target.files[0]; // 最初のファイルを取得
@@ -99,9 +100,6 @@ function handleImageLoad(img) {
         cv.rectangle(right, rectTopLeft, rectBottomRight, new cv.Scalar(0, 0, 0, 255), -1); // 半透明に設定
         cv.putText(right, strRight, pnt, cv.FONT_HERSHEY_SIMPLEX, 0.6, new cv.Scalar(255, 255, 255, 255), 1, cv.LINE_AA);
     }
-    const hist1 = createHistogram(left);
-    const hist2 = createHistogram(right);
-
     cv.resize(right, right, new cv.Size(right.cols, left.rows)); // rightの高さをleftに合わせてリサイズ
     const combined = new cv.Mat();
     let matVector = new cv.MatVector();
@@ -110,16 +108,28 @@ function handleImageLoad(img) {
     cv.hconcat(matVector, combined); // 左右の画像を結合
     cv.imshow(`canvas1`, combined); // 結合した画像をcanvas1に表示
 
+    status.innerHTML = `左:${strLeft}<br>右:${strRight}`;
+
+    const hist1 = createHistogram(left);
+    const hist2 = createHistogram(right);
+    cv.resize(hist2, hist2, new cv.Size(hist2.cols, hist1.rows)); // rightの高さをleftに合わせてリサイズ
     matVector = new cv.MatVector();
     matVector.push_back(hist1);
     matVector.push_back(hist2);
+    try {
+        cv.hconcat(matVector, combined); // 左右の画像を結合
+    } catch (error) {
+        status.innerHTML = "画像の結合中にエラーが発生しました。";
+        status.innerHTML = "<br/>";
+        console.error(error);
+    }
     cv.hconcat(matVector, combined); // 左右の画像を結合
     cv.imshow(`canvas2`, combined); // 結合した画像をcanvas1に表示
 
+    hist1.delete(); hist2.delete()
     emptyMat.delete(); matVector.delete(); combined.delete();
     left.delete();
     right.delete();
-    status.innerHTML = `左:${strLeft}<br>右:${strRight}`;
 }
 
 function processImage(image) {
@@ -146,7 +156,6 @@ function processImage(image) {
     const closed = new cv.Mat();
     cv.morphologyEx(thresh, closed, cv.MORPH_CLOSE, kernel);
     cv.threshold(closed, thresh, 127, 255, cv.THRESH_BINARY);
-
     const contours = new cv.MatVector();
     const hierarchy = new cv.Mat();
     cv.findContours(thresh, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
@@ -156,11 +165,29 @@ function processImage(image) {
         const cnt = contours.get(i);
         const rect = cv.boundingRect(cnt);
         const aspectRatio = rect.width / rect.height;
-        if (rect.width < 300 || Math.abs(aspectRatio - (4 / 3)) > 0.1) {
+        if (rect.width < 300 || rect.height < 300) {
+        // if (rect.width < 300 || Math.abs(aspectRatio - (4 / 3)) > 0.1) {
             continue;
         }
         const cropped = output.roi(rect).clone();
         images.push(cropped);
+    }
+    for (let i = 0; i <= 2; i++) {
+        if (images[i]) {
+            const h = images[i].cols / 4 * 3;
+            if (images[i].rows > h) {
+                const img = images[i].roi(new cv.Rect(0, 0, images[i].cols, h));
+                images[i] = img; // トリミングした画像で上書き
+            }
+        }
+    }
+    
+    if (DEBUG == 1) {
+        alert(images.length);
+        cv.imshow("canvas3", mat);
+        if (images.length > 0) cv.imshow("canvas4", images[0]);
+        if (images.length > 1) cv.imshow("canvas5", images[1]);
+        if (images.length > 2) cv.imshow("canvas6", images[2]);
     }
 
     mat.delete(); output.delete(); gray.delete(); thresh.delete(); closed.delete(); hierarchy.delete(); contours.delete();
@@ -240,13 +267,13 @@ function createHistogram(src) {
     matVector.push_back(hsv);
     const hist = new cv.Mat();
     const mask = new cv.Mat();
-    let color = new cv.Scalar(0, 0, 0);
+    let color = new cv.Scalar(255, 255, 255);
     let scale = 2;
     try {
         cv.calcHist(matVector, channels, mask, hist, histSize, ranges);
         let result = cv.minMaxLoc(hist, mask);
         let max = result.maxVal;
-        let dst = new cv.Mat.ones(src.rows, histSize[0] * scale,
+        let dst = new cv.Mat.zeros(src.rows, histSize[0] * scale,
                                    cv.CV_8UC3);
         // draw histogram
         for (let i = 0; i < histSize[0]; i++) {
