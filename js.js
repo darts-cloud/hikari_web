@@ -99,12 +99,11 @@ function handleImageLoad(img) {
         cv.rectangle(right, rectTopLeft, rectBottomRight, new cv.Scalar(0, 0, 0, 255), -1); // 半透明に設定
         cv.putText(right, strRight, pnt, cv.FONT_HERSHEY_SIMPLEX, 0.6, new cv.Scalar(255, 255, 255, 255), 1, cv.LINE_AA);
     }
+    cv.resize(right, right, new cv.Size(right.cols, left.rows)); // rightの高さをleftに合わせてリサイズ
     const combined = new cv.Mat();
     const matVector = new cv.MatVector();
     matVector.push_back(left);
-    const height = left.rows; // leftの高さを取得
-    cv.resize(right, right, new cv.Size(right.cols, height)); // rightの高さをleftに合わせてリサイズ
-    matVector.push_back(resizedRight);
+    matVector.push_back(right);
     cv.hconcat(matVector, combined); // 左右の画像を結合
     cv.imshow(`canvas1`, combined); // 結合した画像をcanvas1に表示
     emptyMat.delete(); matVector.delete(); combined.delete();
