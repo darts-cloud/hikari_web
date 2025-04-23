@@ -70,6 +70,10 @@ function handleImageLoad(img) {
     cv.imshow(`canvas1`, emptyMat); // 空白をcanvas1に表示
 
     const images = processImage(img);
+    if (images.length != 2) {
+        status.innerHTML = "画像読み込みエラー。";
+        return;
+    }
     const left = images[1];
     const right = images[0];
     const rectTopLeft = new cv.Point(0, 0);
@@ -101,6 +105,7 @@ function handleImageLoad(img) {
     matVector.push_back(right);
     cv.hconcat(matVector, combined); // 左右の画像を結合
     cv.imshow(`canvas1`, combined); // 結合した画像をcanvas1に表示
+    emptyMat.delete(); matVector.delete(); combined.delete();
     status.innerHTML = `左:${strLeft}<br>右:${strRight}`;
 }
 
@@ -114,9 +119,9 @@ function processImage(image) {
     let mat_low_gray = new cv.Mat(mat.rows, mat.cols, mat.type(), new cv.Scalar(28, 28, 28, 0));
     let mat_high_gray = new cv.Mat(mat.rows, mat.cols, mat.type(), new cv.Scalar(28, 28, 28, 255));
     
-    const mask = new cv.Mat();
-    const distMat = new cv.Mat();
-    cv.inRange(output, mat_low_gray, mat_high_gray, mask);
+    // const mask = new cv.Mat();
+    // const distMat = new cv.Mat();
+    // cv.inRange(output, mat_low_gray, mat_high_gray, mask);
     replaceColor(mat, mat_low_white, mat_high_white, col_gray);
     replaceColor(mat, mat_low_gray, mat_high_gray, col_green);
     
@@ -173,8 +178,8 @@ function estimateBrightness(image) {
         return 0;
     }
     const hsv = new cv.Mat();
-    const i = new cv.Mat();
-    const bgr = new cv.Mat();
+    // const i = new cv.Mat();
+    // const bgr = new cv.Mat();
     // cv.cvtColor(image, i, cv.COLOR_RGBA2RGB);
     // cv.imshow(`canvas3`, i);
     // cv.cvtColor(i, bgr, cv.COLOR_RGB2BGR);
