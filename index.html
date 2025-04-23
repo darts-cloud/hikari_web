@@ -32,6 +32,7 @@
     </style>
 </head>
 <body>
+    カメラ設定を読み込んでください。
     <input type="file" id="upload" accept="image/*">
     <!-- <input type="file" id="loadImage" accept="image/*" value="画像をcanvas1に読み込む">
     <div class="button-container">
@@ -42,6 +43,7 @@
     </div> -->
     <div class="brightness-div" style="position: relative;">
         <!-- <canvas id="canvas0"></canvas> -->
+        <span id="status" style="background-color:white; color: black;"></span>
         <div style="display: flex; align-items: flex-start;">
             <div style="margin-right: 10px; position: relative;">
                 <canvas id="canvas1"></canvas>
@@ -50,7 +52,6 @@
                 <canvas id="canvas2"></canvas>
             </div>
         </div>
-        <span id="status" style="background-color:white; color: black;"></span>
         <!-- <canvas id="canvas3"></canvas>
         <canvas id="canvas4"></canvas>
         <canvas id="canvas5"></canvas>
