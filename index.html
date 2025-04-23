@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像処理</title>
+    <script src="./opencv.js" async></script>
+    <script src="./js.js?20250423" async></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            align-items: center;
+            margin: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        canvas {
+            margin: 10px;
+            width: 1280px; /* 幅を800pxに設定 */
+            height: 480px; /* 高さを600pxに設定 */
+        }
+        .brightness-div {
+            height: 1em;
+            background-color: white;
+            align-items: center;
+            justify-content: center;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <input type="file" id="upload" accept="image/*">
+    <!-- <input type="file" id="loadImage" accept="image/*" value="画像をcanvas1に読み込む">
+    <div class="button-container">
+        <button id="testBrightness">明度をテスト</button>
+        <button id="testColorTemperature">色温度をテスト</button>
+        <button id="testHistogram">ヒストグラムをテスト</button>
+        <button id="convertToHSV">HSV化</button>
+    </div> -->
+    <div class="brightness-div" style="position: relative;">
+        <!-- <canvas id="canvas0"></canvas> -->
+        <div style="display: flex; align-items: flex-start;">
+            <div style="margin-right: 10px; position: relative;">
+                <canvas id="canvas1"></canvas>
+            </div>
+            <div style="position: relative;">
+                <canvas id="canvas2"></canvas>
+            </div>
+        </div>
+        <span id="status" style="background-color:white; color: black;"></span>
+        <!-- <canvas id="canvas3"></canvas>
+        <canvas id="canvas4"></canvas>
+        <canvas id="canvas5"></canvas>
+        <canvas id="canvas6"></canvas>
+        <canvas id="canvas7"></canvas> -->
+    </div>
+</body>
+</html>
